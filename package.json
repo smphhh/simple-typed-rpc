@@ -1,0 +1,25 @@
+{
+    "name": "simple-typed-rpc",
+    "version": "0.0.1",
+    "description": "Simple RPC library for Typescript",
+    "license": "MIT",
+    "main": "lib/index.js",
+    "author": {
+        "name": "Samuli Holopainen",
+        "email": "samuli.holopainen@yahoo.com"
+    },
+    "dependencies": {
+        "body-parser": "1.15.x",
+        "express": "4.13.x",
+        "node-fetch": "1.3.x"
+    },
+    "devDependencies": {
+        "typescript": "1.8.x",
+        "typings": "0.7.x"
+    },
+    "scripts": {
+        "build": "tsc",
+        "install-typings": "typings install"
+    },
+    "typings": "./lib/index.d.ts"
+}
