@@ -2,9 +2,18 @@
 
 import fetch from '../external/node-fetch';
 
-import {createProxyFromMethodNames, getPrototypeMethodNames} from '../common';
+import {createProxyFromMethodNames, getPrototypeMethodNames, RpcMethodResolver} from '../common';
 
 import {MetadataQueryName, RequestPayload, ResponsePayload} from './json';
+
+export class HttpClient implements RpcMethodResolver {
+    constructor(private serverEndpoint: string) {
+    }
+    
+    async invokeMethod(methodName: string, args: any[]) {
+        return makeMethodCall(this.serverEndpoint, methodName, args);
+    }
+}
 
 /**
  * 

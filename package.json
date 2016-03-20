@@ -1,8 +1,13 @@
 {
     "name": "simple-typed-rpc",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "Simple RPC library for Typescript",
     "license": "MIT",
+    "keywords": [
+        "typescript",
+        "rpc",
+        "node"
+    ],
     "main": "lib/index.js",
     "author": {
         "name": "Samuli Holopainen",

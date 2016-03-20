@@ -1,5 +1,5 @@
 
-import {getPrototypeMethodNames} from '../common';
+import {RpcBackend} from '../backend';
 
 import * as express from '../external/express';
 
@@ -10,13 +10,10 @@ import {
     isMethodCall
 } from './json';
 
-export class ExpressServer<InstanceType> {
-    private methodNames: string[];
-
+export class ExpressServer {
     constructor(
-        private backend: InstanceType
+        private backend: RpcBackend
     ) {
-        this.methodNames = getPrototypeMethodNames(backend);
     }
 
     getResolver() {
@@ -63,32 +60,17 @@ export class ExpressServer<InstanceType> {
 
     private async resolver(requestPayload: RequestPayload): Promise<ResponsePayload> {
         if (isMethodCall(requestPayload)) {
-            let method = this.backend[requestPayload.methodName];
-            if (typeof method !== 'function') {
-                throw new Error(`Invalid method name: ${requestPayload.methodName}`);
-            }
-
-            let output = this.backend[requestPayload.methodName].apply(this.backend, requestPayload.args);
-
-            if (!output || typeof output.then !== 'function') {
-                throw new Error("Exposed methods must return a thenable.");
-            }
-
-            let returnValue = await output;
+            let returnValue = await this.backend.invokeMethod(
+                requestPayload.methodName,
+                requestPayload.args
+            );
 
             return {
                 returnValue: returnValue
             };
 
         } else if (isMetadataQuery(requestPayload)) {
-            if (requestPayload.metadataQuery === 'methodNames') {
-                return {
-                    returnValue: this.methodNames  
-                };
-                
-            } else {
-                throw new Error("Invalid metadata query.");
-            }
+            throw new Error("Not implemented.");
 
         } else {
             throw new Error("Not implemented.");

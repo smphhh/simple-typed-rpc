@@ -7,9 +7,19 @@ export interface MethodResolver {
     (methodName: string, args: any[]): Promise<any>
 }
 
+export interface RpcMethodResolver {
+    invokeMethod(methodName: string, args: any[]): Promise<any>;
+}
+
+export function getConstructorMethodNames(constructor: any) {
+    let prototype = constructor.prototype;    
+    return Object.getOwnPropertyNames(prototype).filter(propName => {
+        return propName !== 'constructor' && typeof prototype[propName] === 'function';
+    });
+}
+
 export function getPrototypeMethodNames(classInstance: any) {
     let prototype = Object.getPrototypeOf(classInstance);
-    
     return Object.getOwnPropertyNames(prototype).filter(propName => {
         return propName !== 'constructor' && typeof classInstance[propName] === 'function';
     });
@@ -43,5 +53,18 @@ export function createProxyFromMethodNames<T>(
     }
     
     return proxyObject as T;
+}
+
+export function definePromiseMethod<T>(): Promise<T> {
+    let returnValueMetadata: any = {
+        returnType: 'promise'  
+    };
+    
+    return returnValueMetadata;
+}
+
+export interface InterfaceDescriptor<T> {
+    new(): T,
+    interfaceVersion: string;
 }
 

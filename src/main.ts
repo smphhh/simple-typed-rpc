@@ -2,7 +2,21 @@
 let bodyParser = require('body-parser');
 let express = require('express');
 
-import {ExpressServer, httpClient} from './transport';
+import {
+    definePromiseMethod,
+    ExpressServer,
+    HttpClient,
+    InterfaceDescriptorBackend,
+    InterfaceDescriptorFrontend
+} from './';
+
+class TestInterface {    
+    static interfaceVersion = "2.0";
+    
+    getFoo() { return definePromiseMethod<string>(); }
+    getBar(n: number) { return definePromiseMethod<string>(); }
+    getVoid() { return definePromiseMethod<void>(); }
+}
 
 class TestClass {
     private foo: any;
@@ -12,18 +26,27 @@ class TestClass {
     }
 
     async getFoo() {
-        return this.foo.a;
+        return "foo";
     }
 
     async getBar(n: number) {
         return 2 * n + " hey!";
     }
-
+    
+    async getVoid() {
+        
+    }
+    
+    async getAdditional() {
+        return 0;
+    }
 }
 
-let backend = new TestClass();
-let server = new ExpressServer(backend);
-let resolver = server.getResolver();
+let rpcBackend = new InterfaceDescriptorBackend(TestInterface, new TestClass());
+
+let server = new ExpressServer(rpcBackend);
+
+console.log(rpcBackend.getInterfaceName(), rpcBackend.getInterfaceVersion(), rpcBackend.getMethodNames());
 
 let app = express();
 app.use(bodyParser.json());
@@ -35,14 +58,21 @@ let s = app.listen(0, async () => {
     
     let serverEndpoint = `http://localhost:${port}/test_class`;
     
-    let client = httpClient.createFromTemplateClass(serverEndpoint, backend);
-
-    let client2 = await httpClient.createFromServerMetadata<TestClass>(serverEndpoint);
-
-    console.log(await client.getBar(2));
-    console.log(await client.getFoo());
+    //let client = httpClient.createFromTemplateClass<InterfaceDescriptor>(serverEndpoint, backend);
     
-    console.log(await client2.getBar(5));
+    let client = new HttpClient(serverEndpoint);
+    
+    let frontend = new InterfaceDescriptorFrontend(TestInterface, client);
+    
+    let proxy = frontend.getInterface();
+    
+
+    //let client2 = await httpClient.createFromServerMetadata<TestClass>(serverEndpoint);
+
+    console.log(await proxy.getBar(2));
+    console.log(await proxy.getFoo());
+    
+    //console.log(await client2.getBar(5));
 
     console.log("Done");
     
