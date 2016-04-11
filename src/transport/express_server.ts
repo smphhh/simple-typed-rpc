@@ -60,14 +60,22 @@ export class ExpressServer {
 
     private async resolver(requestPayload: RequestPayload): Promise<ResponsePayload> {
         if (isMethodCall(requestPayload)) {
-            let returnValue = await this.backend.invokeMethod(
-                requestPayload.methodName,
-                requestPayload.args
-            );
+            try {
+                let returnValue = await this.backend.invokeMethod(
+                    requestPayload.methodName,
+                    requestPayload.args
+                );
 
-            return {
-                returnValue: returnValue
-            };
+                return {
+                    returnValue: returnValue
+                };
+                
+            } catch (error) {
+                console.log(error);
+                return {
+                    error: error.message  
+                };
+            }
 
         } else if (isMetadataQuery(requestPayload)) {
             throw new Error("Not implemented.");

@@ -15,6 +15,7 @@ class TestInterface {
     
     getFoo() { return definePromiseMethod<string>(); }
     getBar(n: number) { return definePromiseMethod<string>(); }
+    getError() { return definePromiseMethod<number>(); }
     getVoid() { return definePromiseMethod<void>(); }
 }
 
@@ -31,6 +32,14 @@ class TestClass {
 
     async getBar(n: number) {
         return 2 * n + " hey!";
+    }
+    
+    async getError() {
+        if (1) {
+            throw new Error("It's an error.");
+        }
+        
+        return 1;
     }
     
     async getVoid() {
@@ -71,6 +80,7 @@ let s = app.listen(0, async () => {
 
     console.log(await proxy.getBar(2));
     console.log(await proxy.getFoo());
+    console.log(await proxy.getError());
     
     //console.log(await client2.getBar(5));
 
