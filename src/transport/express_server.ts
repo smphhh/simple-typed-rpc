@@ -52,30 +52,23 @@ export class ExpressServer {
             }
 
         } catch (error) {
+            console.log(error);
             return response.status(400).json({
-                error: "Error processing request."
+                error: error.message || "Error processing request."
             });
         }
     }
 
     private async resolver(requestPayload: RequestPayload): Promise<ResponsePayload> {
         if (isMethodCall(requestPayload)) {
-            try {
-                let returnValue = await this.backend.invokeMethod(
-                    requestPayload.methodName,
-                    requestPayload.args
-                );
+            let returnValue = await this.backend.invokeMethod(
+                requestPayload.methodName,
+                requestPayload.args
+            );
 
-                return {
-                    returnValue: returnValue
-                };
-                
-            } catch (error) {
-                console.log(error);
-                return {
-                    error: error.message  
-                };
-            }
+            return {
+                returnValue: returnValue
+            };
 
         } else if (isMetadataQuery(requestPayload)) {
             throw new Error("Not implemented.");
