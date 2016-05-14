@@ -1,6 +1,6 @@
 {
     "name": "simple-typed-rpc",
-    "version": "0.1.2",
+    "version": "0.2.0",
     "description": "Simple RPC library for Typescript",
     "license": "MIT",
     "keywords": [
@@ -14,13 +14,13 @@
         "email": "samuli.holopainen@yahoo.com"
     },
     "dependencies": {
-        "body-parser": "1.15.x",
-        "express": "4.13.x",
-        "node-fetch": "1.3.x"
+        "body-parser": "^1.15.1",
+        "express": "^4.13.4",
+        "node-fetch": "^1.5.2"
     },
     "devDependencies": {
-        "typescript": "1.8.x",
-        "typings": "0.7.x"
+        "typescript": "^1.8.10",
+        "typings": "^0.8.1"
     },
     "scripts": {
         "build": "tsc",

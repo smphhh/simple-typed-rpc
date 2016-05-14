@@ -1,7 +1,9 @@
-export {ExpressServer} from './transport/express_server';
-export {HttpClient} from './transport/http_client';
+export {
+    createExpressResolver,
+    HttpTransportClient,
+    DirectTransportClient
+} from './transport';
 
-export {InterfaceDescriptorFrontend} from './frontend';
-export {InterfaceDescriptorBackend} from './backend';
+export {createInterfaceDescriptorClientProxy, createInterfaceDescriptorBackend} from './rpc';
 
-export {definePromiseMethod} from './common'
+export {definePromiseMethod} from './utils'
