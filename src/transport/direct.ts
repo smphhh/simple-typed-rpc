@@ -8,10 +8,12 @@ export class DirectTransportClient implements JsonTransportClient {
     ) {
     }
     
-    async sendJsonPayload(payload: any) {
-        let jsonData = JSON.stringify(payload);
-        
-        let responsePayload = await this.transportBackend.handleJsonPayload(JSON.parse(jsonData));
-        return responsePayload;
+    async sendJsonPayload(payload: any) {        
+        let responsePayload = await this.transportBackend.handleJsonPayload(DirectTransportClient.simulateJsonTransport(payload));
+        return DirectTransportClient.simulateJsonTransport(responsePayload);
+    }
+    
+    private static simulateJsonTransport(payload: any) {
+        return JSON.parse(JSON.stringify(payload));
     }
 }
