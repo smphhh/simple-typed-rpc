@@ -27,6 +27,20 @@
 			"type": "node",
 			"request": "attach",
 			"port": 5858
+		},
+		{
+			"name": "Run mocha",
+			"type": "node",
+			"program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+			"stopOnEntry": false,
+			"args": ["--recursive", "lib/__tests__"],
+			"cwd": "${workspaceRoot}",
+			"request": "launch",
+			"runtimeExecutable": null,
+			"env": { "NODE_ENV": "production"},
+			"externalConsole": false,
+			"sourceMaps": true,
+			"outDir": "${workspaceRoot}/lib"
 		}
 	]
 }

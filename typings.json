@@ -1,8 +1,11 @@
 {
   "name": "simple-typed-rpc",
   "version": false,
-  "dependencies": {},
+  "dependencies": {
+    "chai": "registry:npm/chai#3.5.0+20160415060238"
+  },
   "ambientDependencies": {
+    "mocha": "registry:env/mocha#2.2.5+20160321223601",
     "node": "registry:dt/node#4.0.0+20160319033040"
   }
 }

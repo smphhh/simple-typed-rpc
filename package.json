@@ -18,13 +18,16 @@
         "node-fetch": "^1.5.2"
     },
     "devDependencies": {
+        "chai": "^3.5.0",
         "express": "^4.13.4",
+        "mocha": "^2.4.5",
         "typescript": "^1.8.10",
         "typings": "^0.8.1"
     },
     "scripts": {
         "build": "tsc",
-        "install-typings": "typings install"
+        "install-typings": "typings install",
+        "test": "mocha --recursive lib/__tests__"
     },
     "typings": "./lib/index.d.ts"
 }
