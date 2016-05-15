@@ -4,6 +4,6 @@ export {
     DirectTransportClient
 } from './transport';
 
-export {createInterfaceDescriptorClientProxy, createInterfaceDescriptorBackend} from './rpc';
+export {createInterfaceDescriptorFrontendProxy, createInterfaceDescriptorBackendProxy} from './rpc';
 
 export {definePromiseMethod} from './utils'

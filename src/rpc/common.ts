@@ -34,7 +34,7 @@ export interface RpcMetadataInterface {
     getMethodNames(): string[];    
 }
 
-export class GenericClientProxy {
+export class GenericFrontendProxy {
     private proxyObject;
     
     constructor(

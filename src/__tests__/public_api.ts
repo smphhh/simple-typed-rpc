@@ -3,7 +3,7 @@ import {expect} from 'chai';
 
 
 import {HttpTransportClient, DirectTransportClient} from '../';
-import {createInterfaceDescriptorClientProxy, createInterfaceDescriptorBackend} from '../';
+import {createInterfaceDescriptorFrontendProxy, createInterfaceDescriptorBackendProxy} from '../';
 import {definePromiseMethod} from '../';
 
 class TestInterfaceDescriptor {
@@ -25,25 +25,24 @@ class TestClass implements TestInterfaceDescriptor {
 describe("Interface descriptor proxy", function () {
     let testImplementation = new TestClass();
 
-    //let clientProxy = createInterfaceDescriptorClientProxy(TestInterfaceDescriptor, new HttpTransportClient("http://localhost:8080"));
-    let backendProxy = createInterfaceDescriptorBackend(TestInterfaceDescriptor, testImplementation);
-    let clientProxy = createInterfaceDescriptorClientProxy(TestInterfaceDescriptor, new DirectTransportClient(backendProxy));
+    let backendProxy = createInterfaceDescriptorBackendProxy(TestInterfaceDescriptor, testImplementation);
+    let frontendProxy = createInterfaceDescriptorFrontendProxy(TestInterfaceDescriptor, new DirectTransportClient(backendProxy));
 
     describe("should proxy method", function () {
         it("with no arguments", async function () {
-            expect(await clientProxy.getFoo()).to.equal(await testImplementation.getFoo());
+            expect(await frontendProxy.getFoo()).to.equal(await testImplementation.getFoo());
         });
 
         it("with multiple primitive arguments", async function () {
-            expect(await clientProxy.getBar(2, 3)).to.equal(await testImplementation.getBar(2, 3));
+            expect(await frontendProxy.getBar(2, 3)).to.equal(await testImplementation.getBar(2, 3));
         });
 
         it("returning an object", async function () {
-            expect(await clientProxy.getObject()).to.deep.equal(await testImplementation.getObject());
+            expect(await frontendProxy.getObject()).to.deep.equal(await testImplementation.getObject());
         });
 
         it("returning a list of primitives", async function () {
-            expect(await clientProxy.getPrimitiveList()).to.deep.equal(await testImplementation.getPrimitiveList());
+            expect(await frontendProxy.getPrimitiveList()).to.deep.equal(await testImplementation.getPrimitiveList());
         });
     });
 

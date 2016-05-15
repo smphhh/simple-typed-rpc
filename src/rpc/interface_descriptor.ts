@@ -2,7 +2,7 @@
 import {JsonTransportClient} from '../transport';
 import {getConstructorMethodNames} from '../utils';
 
-import {RpcMetadataInterface, GenericClientProxy, GenericBackendProxy} from './common';
+import {RpcMetadataInterface, GenericFrontendProxy, GenericBackendProxy} from './common';
 
 export interface InterfaceDescriptor<T> {
     new(): T,
@@ -36,16 +36,16 @@ class InterfaceDescriptorMetadataInterface<InterfaceType> implements RpcMetadata
     }
 }
 
-export function createInterfaceDescriptorClientProxy<T>(
+export function createInterfaceDescriptorFrontendProxy<T>(
     interfaceDescriptor: InterfaceDescriptor<T>,
     transportClient: JsonTransportClient
 ) {
     let metadataInterface = new InterfaceDescriptorMetadataInterface(interfaceDescriptor);
-    let genericClientProxy = new GenericClientProxy(metadataInterface, transportClient);
-    return genericClientProxy.getProxyObject() as T;
+    let genericFrontendProxy = new GenericFrontendProxy(metadataInterface, transportClient);
+    return genericFrontendProxy.getProxyObject() as T;
 }
 
-export function createInterfaceDescriptorBackend<T>(
+export function createInterfaceDescriptorBackendProxy<T>(
     interfaceDescriptor: InterfaceDescriptor<T>,
     backendImplementation: T
 ) {
