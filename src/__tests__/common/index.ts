@@ -1,0 +1,1 @@
+export {TestClass, TestInterfaceDescriptor} from './test_class';

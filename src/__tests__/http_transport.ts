@@ -1,17 +1,27 @@
 
 import {expect} from 'chai';
 
-
-import {HttpTransportClient, DirectTransportClient} from '../';
+import {HttpTransportClient, createExpressResolver} from '../';
 import {createInterfaceDescriptorFrontendProxy, createInterfaceDescriptorBackendProxy} from '../';
 
 import {TestClass, TestInterfaceDescriptor} from './common';
+import {createExpressTestServer} from './utils';
 
-describe("Interface descriptor proxy", function () {
+describe("Http transport", function () {
     let testImplementation = new TestClass();
 
     let backendProxy = createInterfaceDescriptorBackendProxy(TestInterfaceDescriptor, testImplementation);
-    let frontendProxy = createInterfaceDescriptorFrontendProxy(TestInterfaceDescriptor, new DirectTransportClient(backendProxy));
+    let expressResolver = createExpressResolver(backendProxy);
+
+    let frontendProxy: TestInterfaceDescriptor;
+
+    before(async function () {
+        let testServer = await createExpressTestServer('/test', expressResolver);
+        frontendProxy = createInterfaceDescriptorFrontendProxy(
+            TestInterfaceDescriptor,
+            new HttpTransportClient(`http://localhost:${testServer.port}/test`)
+        );
+    });
 
     describe("should proxy method", function () {
         it("with no arguments", async function () {
