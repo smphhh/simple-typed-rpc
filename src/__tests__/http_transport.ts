@@ -9,17 +9,16 @@ import {createExpressTestServer} from './utils';
 
 describe("Http transport", function () {
     let testImplementation = new TestClass();
-
-    let backendProxy = createInterfaceDescriptorBackendProxy(TestInterfaceDescriptor, testImplementation);
-    let expressResolver = createExpressResolver(backendProxy);
-
     let frontendProxy: TestInterfaceDescriptor;
 
     before(async function () {
-        let testServer = await createExpressTestServer('/test', expressResolver);
+        let backendProxy = createInterfaceDescriptorBackendProxy(TestInterfaceDescriptor, testImplementation);
+        let expressResolver = createExpressResolver(backendProxy);
+        
+        let testPort = await createExpressTestServer(expressResolver);
         frontendProxy = createInterfaceDescriptorFrontendProxy(
             TestInterfaceDescriptor,
-            new HttpTransportClient(`http://localhost:${testServer.port}/test`)
+            new HttpTransportClient(`http://localhost:${testPort}/test`)
         );
     });
 
