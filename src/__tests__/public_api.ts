@@ -29,6 +29,10 @@ describe("Interface descriptor proxy", function () {
         it("returning a list of primitives", async function () {
             expect(await frontendProxy.getPrimitiveList()).to.deep.equal(await testImplementation.getPrimitiveList());
         });
+        
+        it("throwing an exception", function () {
+            expect(frontendProxy.getError()).to.eventually.throw(Error, "Backend error.");
+        });
     });
 
 })
