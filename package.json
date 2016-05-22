@@ -8,6 +8,10 @@
         "rpc",
         "node"
     ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/smphhh/simple-typed-rpc"
+    },
     "main": "lib/index.js",
     "author": {
         "name": "Samuli Holopainen",
