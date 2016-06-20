@@ -2,6 +2,10 @@
 
 import {JsonTransportClient, JsonTransportBackend} from './json_transport';
 
+/**
+ * A transport client that communicates with a transport backend through a simulated
+ * direct JSON channel.
+ */
 export class DirectTransportClient implements JsonTransportClient {
     constructor(
         private transportBackend: JsonTransportBackend

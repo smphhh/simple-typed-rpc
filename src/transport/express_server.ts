@@ -4,6 +4,9 @@ import {JsonTransportBackend} from './json_transport';
 
 import * as express from '../external/express';
 
+/**
+ * Wrap a JSON transport backend inside a Express resolver function.
+ */
 export function createExpressResolver(jsonBackend: JsonTransportBackend) {
     return async (request: express.Request, response: express.Response) => {
         let payload = request.body;

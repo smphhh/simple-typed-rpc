@@ -4,6 +4,9 @@ import fetch from '../external/node-fetch';
 
 import {JsonTransportClient} from './json_transport';
 
+/**
+ * JSON transport client for establishing a transport channel with a HTTP transport server.
+ */
 export class HttpTransportClient implements JsonTransportClient {
     constructor(private serverEndpoint: string) {
     }
