@@ -9,6 +9,9 @@ export interface InterfaceDescriptor<T> {
     interfaceVersion: string;
 }
 
+/**
+ * RPC metadata interface implementation based on the data in the interface descriptor. 
+ */
 class InterfaceDescriptorMetadataInterface<InterfaceType> implements RpcMetadataInterface {
     private methodNames: string[];
     private interfaceName: string;
@@ -36,20 +39,26 @@ class InterfaceDescriptorMetadataInterface<InterfaceType> implements RpcMetadata
     }
 }
 
+/**
+ * Create a frontend for the proxied interface from an interface descriptor and a JSON transport client.
+ */
 export function createInterfaceDescriptorFrontendProxy<T>(
     interfaceDescriptor: InterfaceDescriptor<T>,
     transportClient: JsonTransportClient
 ) {
     let metadataInterface = new InterfaceDescriptorMetadataInterface(interfaceDescriptor);
-    let genericFrontendProxy = new GenericJsonFrontendProxy(metadataInterface, transportClient);
-    return genericFrontendProxy.getProxyObject() as T;
+    let frontendProxy = new GenericJsonFrontendProxy(metadataInterface, transportClient);
+    return frontendProxy.getProxyObject() as T;
 }
 
+/**
+ * Wrap an implementation of the proxied interface inside a JSON transport backend proxy.
+ */
 export function createInterfaceDescriptorBackendProxy<T>(
     interfaceDescriptor: InterfaceDescriptor<T>,
     backendImplementation: T
 ) {
     let metadataInterface = new InterfaceDescriptorMetadataInterface(interfaceDescriptor);
-    let genericBackendProxy = new GenericJsonBackendProxy(metadataInterface, backendImplementation);
-    return genericBackendProxy;
+    let backendProxy = new GenericJsonBackendProxy(metadataInterface, backendImplementation);
+    return backendProxy;
 }
