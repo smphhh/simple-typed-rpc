@@ -5,7 +5,7 @@ chai.use(chaiAsPromised);
 
 let expect = chai.expect;
 
-import {HttpTransportClient, createExpressResolver} from '../';
+import {HttpTransportClient, createExpressResolver, RpcBackendError} from '../';
 import {createInterfaceDescriptorFrontendProxy, createInterfaceDescriptorBackendProxy} from '../';
 
 import {TestClass, TestInterfaceDescriptor} from './common';
@@ -44,7 +44,7 @@ describe("Http transport", function () {
         });
         
         it("throwing an exception", function () {
-            return expect(frontendProxy.getError()).to.eventually.be.rejectedWith(Error);
+            return expect(frontendProxy.getError()).to.eventually.be.rejectedWith(RpcBackendError);
         });
     });
 

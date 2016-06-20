@@ -2,7 +2,7 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 
-import {HttpTransportClient, DirectTransportClient} from '../';
+import {HttpTransportClient, DirectTransportClient, RpcBackendError} from '../';
 import {createInterfaceDescriptorFrontendProxy, createInterfaceDescriptorBackendProxy} from '../';
 
 import {TestClass, TestInterfaceDescriptor} from './common';
@@ -34,7 +34,7 @@ describe("Interface descriptor proxy", function () {
         });
         
         it("throwing an exception", function () {
-            return expect(frontendProxy.getError()).to.eventually.be.rejectedWith(Error);
+            return expect(frontendProxy.getError()).to.eventually.be.rejectedWith(RpcBackendError);
         });
     });
 

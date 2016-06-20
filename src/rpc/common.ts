@@ -1,5 +1,6 @@
 
 import {JsonTransportClient} from '../transport';
+import {RpcTransportError} from '../transport/common';
 
 type MetadataQueryName = 'methodNames';
 
@@ -27,6 +28,12 @@ function isMethodCall(arg: RequestPayload): arg is MethodCall {
     return (arg as MethodCall).methodName !== undefined;
 }
 
+export class RpcBackendError extends Error {
+    constructor(message?: string) {
+        message = message || RpcBackendError.name;
+        super(message);
+    }
+}
 
 export interface RpcMetadataInterface {
     getInterfaceName(): string;
@@ -64,12 +71,18 @@ export class GenericFrontendProxy {
     
     private async invokeMethod(methodName: string, args: any[]) {
         let requestPayload = { methodName, args };
-        let responsePayload = await this.transportClient.sendJsonPayload(requestPayload);
-        
+        let responsePayload;
+
+        try {
+            responsePayload = await this.transportClient.sendJsonPayload(requestPayload);
+        } catch (error) {
+            throw new RpcTransportError(error.message);
+        }
+
         // TODO: perform metadata validation here.
 
         if (responsePayload.error) {
-            throw new Error(responsePayload.error);
+            throw new RpcBackendError(responsePayload.error);
         } else {
             return responsePayload.returnValue;
         }

@@ -17,6 +17,6 @@ export class TestClass implements TestInterfaceDescriptor {
     async getObject() { return { a: 1, b: "b" }; }
     async getPrimitiveList() { return ["a", "b", "c"]; }
     async getError(): Promise<string> {
-        throw new Error("Backend error.");
+        throw new Error("TestClass error.");
     }
 }
