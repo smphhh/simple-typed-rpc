@@ -1,11 +1,14 @@
 
-import {expect} from 'chai';
-
+import * as chai from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
 
 import {HttpTransportClient, DirectTransportClient} from '../';
 import {createInterfaceDescriptorFrontendProxy, createInterfaceDescriptorBackendProxy} from '../';
 
 import {TestClass, TestInterfaceDescriptor} from './common';
+
+let expect = chai.expect;
+chai.use(chaiAsPromised);
 
 describe("Interface descriptor proxy", function () {
     let testImplementation = new TestClass();
@@ -31,7 +34,7 @@ describe("Interface descriptor proxy", function () {
         });
         
         it("throwing an exception", function () {
-            expect(frontendProxy.getError()).to.eventually.throw(Error, "Backend error.");
+            return expect(frontendProxy.getError()).to.eventually.be.rejectedWith(Error);
         });
     });
 

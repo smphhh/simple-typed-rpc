@@ -44,7 +44,7 @@ describe("Http transport", function () {
         });
         
         it("throwing an exception", function () {
-            expect(frontendProxy.getError()).to.eventually.throw(Error, "Backend error.");
+            return expect(frontendProxy.getError()).to.eventually.be.rejectedWith(Error);
         });
     });
 
