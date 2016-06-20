@@ -1,5 +1,5 @@
 
-import {JsonTransportClient} from '../transport';
+import {JsonTransportClient, JsonTransportBackend} from '../transport';
 import {RpcTransportError} from '../transport/common';
 
 type MetadataQueryName = 'methodNames';
@@ -41,7 +41,10 @@ export interface RpcMetadataInterface {
     getMethodNames(): string[];    
 }
 
-export class GenericFrontendProxy {
+/**
+ * Generic frontend proxy translating method calls into JSON transport payloads.
+ */
+export class GenericJsonFrontendProxy {
     private proxyObject;
     
     constructor(
@@ -89,7 +92,10 @@ export class GenericFrontendProxy {
     }
 }
 
-export class GenericBackendProxy {
+/**
+ * Generic backend proxy translating JSON transport payloads into actual backend method calls.
+ */
+export class GenericJsonBackendProxy implements JsonTransportBackend {
     constructor(
         private metadataInterface: RpcMetadataInterface,
         private backendImplementation: any
@@ -151,8 +157,7 @@ export class GenericBackendProxy {
 
     }
     
-    private async invokeMethod(methodName: string, args: any[]) {
-        let returnValue = await this.backendImplementation[methodName].apply(this.backendImplementation, args);
-        return returnValue;
+    private invokeMethod(methodName: string, args: any[]) {
+        return this.backendImplementation[methodName].apply(this.backendImplementation, args);
     }
 }
