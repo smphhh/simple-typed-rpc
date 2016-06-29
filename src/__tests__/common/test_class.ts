@@ -11,6 +11,12 @@ export class TestInterfaceDescriptor {
     async getError() { return definePromiseMethod<string>(); }
 }
 
+export class ChangedTestInterfaceDescriptor {
+    static interfaceVersion = "1.0";
+
+    async getObject() { return definePromiseMethod<{ a: number, b: string }>(); }
+}
+
 export class TestClass implements TestInterfaceDescriptor {
     async getFoo() { return "hi"; }
     async getBar(n1: number, n2: number) { return n1 + n2 + 2; }

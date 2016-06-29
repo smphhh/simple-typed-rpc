@@ -1,1 +1,1 @@
-export {TestClass, TestInterfaceDescriptor} from './test_class';
+export * from './test_class';

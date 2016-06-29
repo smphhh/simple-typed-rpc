@@ -5,7 +5,7 @@ import * as chaiAsPromised from 'chai-as-promised';
 import {HttpTransportClient, DirectTransportClient, RpcBackendError} from '../';
 import {createInterfaceDescriptorFrontendProxy, createInterfaceDescriptorBackendProxy} from '../';
 
-import {TestClass, TestInterfaceDescriptor} from './common';
+import {TestClass, TestInterfaceDescriptor, ChangedTestInterfaceDescriptor} from './common';
 
 let expect = chai.expect;
 chai.use(chaiAsPromised);
@@ -38,5 +38,12 @@ describe("Interface descriptor proxy", function () {
         });
     });
 
-})
+    describe("should check interface metadata", function () {
+        it("for name match", async function () {
+            let changedFrontendProxy = createInterfaceDescriptorFrontendProxy(ChangedTestInterfaceDescriptor, new DirectTransportClient(backendProxy));
+            await expect(changedFrontendProxy.getObject()).to.eventually.be.rejectedWith(RpcBackendError);
+        });
+    });
+
+});
 

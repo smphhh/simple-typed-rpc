@@ -4,18 +4,25 @@ import {RpcTransportError} from '../transport/common';
 
 type MetadataQueryName = 'methodNames';
 
-interface MetadataQuery {
+interface BasePayload {
+    interfaceMetadata?: {
+        name: string;
+        version: string;
+    }
+}
+
+interface MetadataQuery extends BasePayload {
     metadataQuery: MetadataQueryName
 }
 
-interface MethodCall {
+interface MethodCall extends BasePayload {
     methodName: string,
     args: any[]    
 }
 
 type RequestPayload = MetadataQuery | MethodCall;
 
-interface ResponsePayload {
+export interface ResponsePayload {
     error?: any,
     returnValue?: any
 }
@@ -73,7 +80,15 @@ export class GenericJsonFrontendProxy {
     }
     
     private async invokeMethod(methodName: string, args: any[]) {
-        let requestPayload = { methodName, args };
+        let requestPayload = {
+            interfaceMetadata: {
+                name: this.metadataInterface.getInterfaceName(),
+                version: this.metadataInterface.getInterfaceVersion()
+            },
+            methodName: methodName, 
+            args: args
+        };
+
         let responsePayload;
 
         try {
@@ -102,39 +117,51 @@ export class GenericJsonBackendProxy implements JsonTransportBackend {
     ) {    
     }
     
-    async handleJsonPayload(payload: any): Promise<any> {
-        if (!payload || typeof payload !== 'object') {
-            console.log("Not configured properly.");
-        }
+    async handleJsonPayload(payload: any): Promise<ResponsePayload> {
 
         try {
-            if (typeof payload.methodName === 'string' && Array.isArray(payload.args)) {
-                let responsePayload = await this.resolver({
-                    methodName: payload.methodName,
-                    args: payload.args
-                });
+            let requestPayload = GenericJsonBackendProxy.validatePayload(payload);
 
-                return responsePayload;
+            let interfaceMetadata = requestPayload.interfaceMetadata;
 
-            } else if (typeof payload.metadataQuery) {
-                let responsePayload = await this.resolver({
-                    metadataQuery: payload.metadataQuery
-                });
-
-                return responsePayload;
-
-            } else {
-                return {
-                    error: "Invalid payload."
-                };
+            if (interfaceMetadata) {
+                this.checkInterfaceName(interfaceMetadata.name);
+                this.checkInterfaceVersion(interfaceMetadata.version);
             }
+
+            let responsePayload = await this.resolver(requestPayload);
+
+            return responsePayload;
 
         } catch (error) {
             console.log(error);
-            return {
-                error: error.message || "Error processing request."
-            };
+
+            if (error instanceof RpcBackendError) {
+                return { error: error.message || "RPC backend error" };
+            } else if (error instanceof RpcTransportError) {
+                return { error: error.message || "RPC transport error" };
+            } else {
+                return { error: error.message || "Unknown error" };
+            }
         }
+    }
+
+    private static validatePayload(requestPayload: any) {
+        if (!requestPayload || typeof requestPayload !== 'object') {
+            throw new RpcTransportError("Invalid request payload.");
+        }
+
+        if (typeof requestPayload.methodName === 'string' && Array.isArray(requestPayload.args)) {
+            return requestPayload as RequestPayload;
+        } else if (typeof requestPayload.metadataQuery === 'string') {
+            return requestPayload as RequestPayload;
+        } else {
+            throw new RpcTransportError("Invalid request payload.");
+        }
+    }
+
+    private async processPayload(requestPayload: RequestPayload) {
+
     }
     
     private async resolver(requestPayload: RequestPayload): Promise<ResponsePayload> {
@@ -149,15 +176,31 @@ export class GenericJsonBackendProxy implements JsonTransportBackend {
             };
 
         } else if (isMetadataQuery(requestPayload)) {
-            throw new Error("Not implemented.");
+            throw new RpcBackendError("Not implemented.");
 
         } else {
-            throw new Error("Not implemented.");
+            throw new RpcBackendError("Not implemented.");
         }
 
     }
     
     private invokeMethod(methodName: string, args: any[]) {
-        return this.backendImplementation[methodName].apply(this.backendImplementation, args);
+        try { 
+            return this.backendImplementation[methodName].apply(this.backendImplementation, args);
+        } catch (error) {
+            throw new RpcBackendError(error.message);
+        }
+    }
+
+    private checkInterfaceName(interfaceName: string) {
+        if(interfaceName !== this.metadataInterface.getInterfaceName()) {
+            throw new RpcTransportError(`Interface name mismatch. Backend expected "${this.metadataInterface.getInterfaceName()}" and frontend provided "${interfaceName}".'`);
+        }
+    }
+
+    private checkInterfaceVersion(interfaceVersion: string) {
+        if(interfaceVersion !== this.metadataInterface.getInterfaceVersion()) {
+            throw new RpcTransportError(`Interface version mismatch. Backend expected "${this.metadataInterface.getInterfaceVersion()}" and frontend provided "${interfaceVersion}".'`)
+        }
     }
 }
