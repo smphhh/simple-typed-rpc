@@ -2,27 +2,6 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Launch",
-			"type": "node",
-			"request": "launch",
-			"program": "${workspaceRoot}/src/main.ts",
-			"stopOnEntry": false,
-			"args": [],
-			"cwd": "${workspaceRoot}",
-			"runtimeExecutable": null,
-			"runtimeArgs": [
-				"--nolazy"
-			],
-			"env": {
-				"NODE_ENV": "development",
-				"DEBUG": "*",
-                "PORT": "1337"
-			},
-			"externalConsole": false,
-			"sourceMaps": true,
-			"outDir": "${workspaceRoot}/lib"
-		},
-		{
 			"name": "Attach",
 			"type": "node",
 			"request": "attach",
@@ -33,9 +12,10 @@
 			"type": "node",
 			"program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
 			"stopOnEntry": false,
-			"args": ["--recursive", "lib/__tests__"],
+			"args": ["lib/**/__tests__/**/*.js"],
 			"cwd": "${workspaceRoot}",
 			"request": "launch",
+			"preLaunchTask": "build",
 			"runtimeExecutable": null,
 			"env": { "NODE_ENV": "production"},
 			"externalConsole": false,

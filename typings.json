@@ -2,16 +2,13 @@
   "name": "simple-typed-rpc",
   "version": false,
   "dependencies": {
-    "chai": "registry:npm/chai#3.5.0+20160415060238",
-    "chai-as-promised": "registry:npm/chai-as-promised#5.1.0+20160310030142"
+    "body-parser": "registry:npm/body-parser#1.15.2+20160815132839",
+    "chai": "registry:npm/chai#3.5.0+20160723033700",
+    "chai-as-promised": "registry:npm/chai-as-promised#5.1.0+20160310030142",
+    "express": "registry:npm/express#4.14.0+20160815112707"
   },
-  "ambientDependencies": {
-    "body-parser": "registry:dt/body-parser#0.0.0+20160317120654",
-    "express": "registry:dt/express#4.0.0+20160317120654",
-    "express-serve-static-core": "registry:dt/express-serve-static-core#0.0.0+20160322035842",
-    "mime": "registry:dt/mime#0.0.0+20160316155526",
-    "mocha": "registry:env/mocha#2.2.5+20160321223601",
-    "node": "registry:dt/node#4.0.0+20160319033040",
-    "serve-static": "registry:dt/serve-static#0.0.0+20160501131543"
+  "globalDependencies": {
+    "mocha": "registry:env/mocha#2.2.5+20160723033700",
+    "node": "registry:env/node#6.0.0+20160813135048"
   }
 }

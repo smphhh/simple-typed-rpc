@@ -28,12 +28,12 @@
         "express": "^4.13.4",
         "mocha": "^2.4.5",
         "typescript": "^1.8.10",
-        "typings": "^0.8.1"
+        "typings": "^1.3.2"
     },
     "scripts": {
         "build": "tsc",
         "install-typings": "typings install",
-        "test": "mocha --recursive lib/__tests__"
+        "test": "mocha lib/**/__tests__/**/*.js"
     },
     "typings": "./lib/index.d.ts"
 }
