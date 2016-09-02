@@ -1,6 +1,6 @@
 
 
-import {JsonTransportClient, JsonTransportBackend} from './json_transport';
+import {JsonTransportClient, JsonTransportBackend, jsonParse, jsonStringify} from './json_transport';
 
 /**
  * A transport client that communicates with a transport backend through a simulated
@@ -18,6 +18,6 @@ export class DirectTransportClient implements JsonTransportClient {
     }
     
     private static simulateJsonTransport(payload: any) {
-        return JSON.parse(JSON.stringify(payload));
+        return jsonParse(jsonStringify(payload));
     }
 }

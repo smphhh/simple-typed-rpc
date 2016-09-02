@@ -36,6 +36,15 @@ describe("Interface descriptor proxy", function () {
         it("throwing an exception", function () {
             return expect(frontendProxy.getError()).to.eventually.be.rejectedWith(RpcBackendError);
         });
+
+        it("with a date argument", async function () {
+            let date = new Date();
+            expect(await frontendProxy.getByDate(date)).to.equal(await testImplementation.getByDate(date));
+        });
+
+        it("returning a date", async function () {
+            expect(await frontendProxy.getDate()).to.deep.equal(await testImplementation.getDate());
+        });
     });
 
     describe("should check interface metadata", function () {
