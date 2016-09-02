@@ -9,6 +9,8 @@ export class TestInterfaceDescriptor {
     async getObject() { return definePromiseMethod<{ a: number, b: string }>(); }
     async getPrimitiveList() { return definePromiseMethod<string[]>(); }
     async getError() { return definePromiseMethod<string>(); }
+    async getByDate(date: Date) { return definePromiseMethod<number>(); }
+    async getDate() { return definePromiseMethod<Date>(); }
 }
 
 export class ChangedTestInterfaceDescriptor {
@@ -25,4 +27,6 @@ export class TestClass implements TestInterfaceDescriptor {
     async getError(): Promise<string> {
         throw new Error("TestClass error.");
     }
+    async getByDate(date: Date) { return date.valueOf(); }
+    async getDate() { return new Date(1000000); }
 }

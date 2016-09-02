@@ -2,7 +2,7 @@
 
 import fetch from '../external/node-fetch';
 
-import {JsonTransportClient} from './json_transport';
+import {JsonTransportClient, jsonParse, jsonStringify} from './json_transport';
 
 /**
  * JSON transport client for establishing a transport channel with a HTTP transport server.
@@ -12,18 +12,18 @@ export class HttpTransportClient implements JsonTransportClient {
     }
         
     async sendJsonPayload(payload: any) {
+        let serializedPayload = jsonStringify(payload);
         let response = await fetch(this.serverEndpoint, {
             method: 'post',
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
+                'Accept': 'text/plain',
+                'Content-Type': 'text/plain'
             },
-            body: JSON.stringify(payload)
+            body: serializedPayload
         });
         
-        let responsePayload = await response.json();
-        
-        return responsePayload;
+        let responseBody = await response.text(); 
+        return jsonParse(responseBody);
     }
 }
 

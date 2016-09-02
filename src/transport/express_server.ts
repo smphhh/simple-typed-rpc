@@ -1,6 +1,6 @@
 
 //import {RpcBackend} from '../backend';
-import {JsonTransportBackend} from './json_transport';
+import {JsonTransportBackend, jsonParse, jsonStringify} from './json_transport';
 
 import * as express from 'express';
 
@@ -9,8 +9,27 @@ import * as express from 'express';
  */
 export function createExpressResolver(jsonBackend: JsonTransportBackend) {
     return async (request: express.Request, response: express.Response) => {
-        let payload = request['body'];
+        let requestBody = request['body'];
+        let payload;
+        if (typeof requestBody === 'string') {
+            payload = jsonParse(requestBody);
+        } else {
+            let bodyString = JSON.stringify(requestBody);
+            payload = jsonParse(bodyString);
+        }
+
         let responsePayload = await jsonBackend.handleJsonPayload(payload);
-        response.json(responsePayload);
+        
+        response.format({
+            'text/plain': function () {
+                response.send(jsonStringify(responsePayload));
+            },
+            'application/json': function () {
+                response.json(responsePayload);
+            },
+            'default': function () {
+                response.status(406).send('Not Acceptable');
+            }
+        });
     }
 }

@@ -7,6 +7,7 @@ export async function createExpressTestServer(requestHandler: express.RequestHan
     let app = express();
 
     app.use(bodyParser.json());
+    app.use(bodyParser.text());
     
     app.post('/test', requestHandler);
 

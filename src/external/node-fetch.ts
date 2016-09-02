@@ -1,7 +1,8 @@
 
 
 export interface Response {
-    json: () => any
+    json: () => any;
+    text: () => string;
 }
 
 export interface Fetch {
