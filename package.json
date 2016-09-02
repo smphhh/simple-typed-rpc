@@ -1,6 +1,6 @@
 {
     "name": "simple-typed-rpc",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "description": "Simple RPC library for Typescript",
     "license": "MIT",
     "keywords": [
