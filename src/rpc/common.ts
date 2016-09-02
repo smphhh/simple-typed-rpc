@@ -134,8 +134,6 @@ export class GenericJsonBackendProxy implements JsonTransportBackend {
             return responsePayload;
 
         } catch (error) {
-            console.log(error);
-
             if (error instanceof RpcBackendError) {
                 return { error: error.message || "RPC backend error" };
             } else if (error instanceof RpcTransportError) {
