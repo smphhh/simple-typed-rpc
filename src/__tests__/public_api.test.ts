@@ -2,7 +2,7 @@
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 
-import {HttpTransportClient, DirectTransportClient, RpcBackendError} from '../';
+import {HttpTransportClient, DirectTransportClient, RpcBackendError, RpcTransportError} from '../';
 import {createInterfaceDescriptorFrontendProxy, createInterfaceDescriptorBackendProxy} from '../';
 
 import {TestClass, TestInterfaceDescriptor, ChangedTestInterfaceDescriptor} from './common';
@@ -58,6 +58,15 @@ describe("Interface descriptor proxy", function () {
             let changedFrontendProxy = createInterfaceDescriptorFrontendProxy(NewTestInterfaceDescriptor, new DirectTransportClient(backendProxy));
             await expect(changedFrontendProxy.getDate()).to.eventually.be.rejectedWith(RpcBackendError);
         });
+    });
+
+    it("should not pass non-plain objects in strict mode", function () {
+        let complexObject = Object.create({ a: 1 });
+        return expect(frontendProxy.getWithAnyArgReturningVoid(complexObject)).to.eventually.be.rejectedWith(RpcTransportError);
+    });
+
+    it("should not return non-plain objects in strict mode", function () {
+        return expect(frontendProxy.getNonPlainObject()).to.eventually.be.rejectedWith(RpcTransportError);
     });
 
 });

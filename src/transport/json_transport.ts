@@ -1,4 +1,6 @@
 
+import {RpcTransportError} from './common';
+
 export interface JsonTransportClient {
     sendJsonPayload(jsonPayload: any): Promise<any>;
     //invokeMethod(methodName: string, args: any[]): Promise<any>;
@@ -34,10 +36,10 @@ export function replacer(key: any, value: any): any {
         } else if (objectPrototype === Array.prototype) {
             return value.map(v => serializeValue(v));
         } else {
-            throw new Error("Cannot serialize non-plain objects");
+            throw new RpcTransportError("Cannot serialize non-plain objects");
         }
     } else {
-        throw new Error(`Cannot serialize values of type: ${value}`);
+        throw new RpcTransportError(`Cannot serialize values of type: ${value}`);
     }
 }
 
@@ -73,7 +75,7 @@ export function reviver(key: any, value: any) {
             if (parts[2] === serializationDateTypeTag) {
                 return new Date(parts[3]);
             } else {
-                throw new Error(`Invalid serialization type tag: ${parts[2]}`);
+                throw new RpcTransportError(`Invalid serialization type tag: ${parts[2]}`);
             }
         } else {
             return value;

@@ -5,7 +5,7 @@ chai.use(chaiAsPromised);
 
 let expect = chai.expect;
 
-import {HttpTransportClient, createExpressResolver, RpcBackendError} from '../';
+import {HttpTransportClient, createExpressResolver, RpcBackendError, RpcTransportError} from '../';
 import {createInterfaceDescriptorFrontendProxy, createInterfaceDescriptorBackendProxy} from '../';
 
 import {TestClass, TestInterfaceDescriptor} from './common';
@@ -55,6 +55,19 @@ describe("Http transport", function () {
         it("returning a date", async function () {
             expect(await frontendProxy.getDate()).to.deep.equal(await testImplementation.getDate());
         });
+    });
+    
+    it("should not pass non-plain objects in strict mode", function () {
+        let complexObject = Object.create({ a: 1 });
+        return expect(frontendProxy.getWithAnyArgReturningVoid(complexObject)).to.eventually.be.rejectedWith(RpcTransportError);
+    });
+
+    it("should not return non-plain objects in strict mode", function () {
+        return expect(frontendProxy.getNonPlainObject()).to.eventually.be.rejectedWith(RpcBackendError);
+    });
+
+    it("should proxy methods with optional arguments", async function () {
+        expect(await frontendProxy.getWithOptionalArg()).to.equal(await testImplementation.getWithOptionalArg());
     });
 
 })

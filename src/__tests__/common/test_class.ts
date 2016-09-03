@@ -11,6 +11,9 @@ export class TestInterfaceDescriptor {
     async getError() { return definePromiseMethod<string>(); }
     async getByDate(date: Date) { return definePromiseMethod<number>(); }
     async getDate() { return definePromiseMethod<Date>(); }
+    async getWithAnyArgReturningVoid(arg: any) { return definePromiseMethod<void>(); }
+    async getNonPlainObject() { return definePromiseMethod<any>(); }
+    async getWithOptionalArg(v?: number) { return definePromiseMethod<number>(); }
 }
 
 export class ChangedTestInterfaceDescriptor {
@@ -29,4 +32,7 @@ export class TestClass implements TestInterfaceDescriptor {
     }
     async getByDate(date: Date) { return date.valueOf(); }
     async getDate() { return new Date(1000000); }
+    async getWithAnyArgReturningVoid(arg: any) { return; }
+    async getNonPlainObject() { let obj = Object.create({ s: "foo" }); obj.b = 1; return obj; }
+    async getWithOptionalArg(v = Infinity) { return 5376; }
 }

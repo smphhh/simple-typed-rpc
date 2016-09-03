@@ -1,5 +1,6 @@
 
 //import {RpcBackend} from '../backend';
+import {RpcTransportError} from './common';
 import {JsonTransportBackend, jsonParse, jsonStringify} from './json_transport';
 
 import * as express from 'express';
@@ -11,18 +12,30 @@ export function createExpressResolver(jsonBackend: JsonTransportBackend) {
     return async (request: express.Request, response: express.Response) => {
         let requestBody = request['body'];
         let payload;
-        if (typeof requestBody === 'string') {
-            payload = jsonParse(requestBody);
-        } else {
-            let bodyString = JSON.stringify(requestBody);
-            payload = jsonParse(bodyString);
+        let responsePayload;
+        try {
+            if (typeof requestBody === 'string') {
+                payload = jsonParse(requestBody);
+            } else {
+                let bodyString = JSON.stringify(requestBody);
+                payload = jsonParse(bodyString);
+            }
+
+            responsePayload = await jsonBackend.handleJsonPayload(payload);
+
+        } catch (error) {
+            responsePayload = { error: error.message || "Unknown error" };
         }
 
-        let responsePayload = await jsonBackend.handleJsonPayload(payload);
-        
         response.format({
             'text/plain': function () {
-                response.send(jsonStringify(responsePayload));
+                let serializedResponse: string;
+                try {
+                    serializedResponse = jsonStringify(responsePayload);
+                } catch (error) {
+                    serializedResponse = JSON.stringify({ error: error.message || "Unknown error" });
+                }
+                response.send(serializedResponse);
             },
             'application/json': function () {
                 response.json(responsePayload);
