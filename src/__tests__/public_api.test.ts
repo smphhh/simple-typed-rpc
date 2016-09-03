@@ -46,6 +46,10 @@ describe("Interface descriptor proxy", function () {
         it("returning a date", async function () {
             expect(await frontendProxy.getDate()).to.deep.equal(await testImplementation.getDate());
         });
+
+        it("with null as argument", async function () {
+            expect(await frontendProxy.getWithOptionalArg(null)).to.deep.equal(await testImplementation.getWithOptionalArg(null));
+        });
     });
 
     describe("should check interface metadata", function () {

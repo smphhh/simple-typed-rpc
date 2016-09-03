@@ -44,7 +44,7 @@ export function replacer(key: any, value: any): any {
 }
 
 function serializeValue(value: any) {
-    if (Object.getPrototypeOf(value) === Date.prototype) {
+    if (value && typeof value === 'object' && Object.getPrototypeOf(value) === Date.prototype) {
         return serializeDate(value);
     } else {
         return value;
