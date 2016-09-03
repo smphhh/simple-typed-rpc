@@ -50,6 +50,14 @@ describe("Interface descriptor proxy", function () {
         it("with null as argument", async function () {
             expect(await frontendProxy.getWithOptionalArg(null)).to.deep.equal(await testImplementation.getWithOptionalArg(null));
         });
+
+        it("returning null", async function () {
+            expect(await frontendProxy.getNull()).to.be.null;
+        });
+
+        it("returning undefined", async function () {
+            expect(await frontendProxy.getUndefined()).to.be.undefined;
+        });
     });
 
     describe("should check interface metadata", function () {

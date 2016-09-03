@@ -55,6 +55,18 @@ describe("Http transport", function () {
         it("returning a date", async function () {
             expect(await frontendProxy.getDate()).to.deep.equal(await testImplementation.getDate());
         });
+
+        it("with null as argument", async function () {
+            expect(await frontendProxy.getWithOptionalArg(null)).to.deep.equal(await testImplementation.getWithOptionalArg(null));
+        });
+
+        it("returning null", async function () {
+            expect(await frontendProxy.getNull()).to.be.null;
+        });
+
+        it("returning undefined", async function () {
+            expect(await frontendProxy.getUndefined()).to.be.undefined;
+        });
     });
     
     it("should not pass non-plain objects in strict mode", function () {

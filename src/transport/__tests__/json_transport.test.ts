@@ -40,4 +40,24 @@ describe("JSON transport", function () {
         expect(deserializedObj).to.deep.equal(obj);
     });
 
+    it("should serialize and deserialize null and undefined", function () {
+        var obj = {
+            a: 1,
+            d: [1, 2, 3],
+            u: undefined,
+            n: null
+        };
+
+        var expectedObj = {
+            a: 1,
+            d: [1, 2, 3],
+            n: null
+        };
+
+        let serializedObj = jsonStringify(obj);
+        let deserializedObj = jsonParse(serializedObj);
+
+        expect(deserializedObj).to.deep.equal(expectedObj);
+    });
+
 });

@@ -14,6 +14,8 @@ export class TestInterfaceDescriptor {
     async getWithAnyArgReturningVoid(arg: any) { return definePromiseMethod<void>(); }
     async getNonPlainObject() { return definePromiseMethod<any>(); }
     async getWithOptionalArg(v?: number) { return definePromiseMethod<number>(); }
+    async getNull() { return definePromiseMethod<string>(); }
+    async getUndefined() { return definePromiseMethod<string>(); }
 }
 
 export class ChangedTestInterfaceDescriptor {
@@ -35,4 +37,6 @@ export class TestClass implements TestInterfaceDescriptor {
     async getWithAnyArgReturningVoid(arg: any) { return; }
     async getNonPlainObject() { let obj = Object.create({ s: "foo" }); obj.b = 1; return obj; }
     async getWithOptionalArg(v = Infinity) { return 5376; }
+    async getNull() { return null; }
+    async getUndefined() { return undefined; }
 }
